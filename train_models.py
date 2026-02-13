@@ -43,7 +43,8 @@ df_test = pd.read_csv(
 
 df = pd.concat([df_train, df_test], ignore_index=True)
 
-df.to_csv("data/adult_income.csv", index=False)
+# df_train.to_csv("data/adult_income.csv", index=False)
+# df_test.to_csv("data/adult_income_test.csv", index=False)
 
 
 df = pd.read_csv("data/adult_income.csv")
@@ -56,17 +57,27 @@ df["income"] = df["income"].map({
 ">50K":1
 })
 
-le = LabelEncoder()
+encoders = {}
+
 for col in df.select_dtypes(include="object").columns:
+    le = LabelEncoder()
+    df[col] = df[col].astype(str).str.strip()
     df[col] = le.fit_transform(df[col])
+    encoders[col] = le
 
 
 
 X = df.drop("income", axis=1)
 y = df["income"]
 
+feature_cols = X.columns.tolist()
+
 scaler = StandardScaler()
 X = scaler.fit_transform(X)
+
+joblib.dump(encoders, "model/encoders.pkl")
+joblib.dump(scaler, "model/scaler.pkl")
+joblib.dump(feature_cols, "model/features.pkl")
 
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42
@@ -99,6 +110,6 @@ results = {}
 for name, model in models.items():
     model.fit(X_train, y_train)
     results[name] = evaluate(model)
-    joblib.dump(model, f"models/{name}.pkl")
+    joblib.dump(model, f"model/{name}.pkl")
 
 print(pd.DataFrame(results).T)
