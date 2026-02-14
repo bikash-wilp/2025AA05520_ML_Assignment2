@@ -16,36 +16,12 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.ensemble import RandomForestClassifier
 from xgboost import XGBClassifier
 
-
 cols = [
 "age","workclass","fnlwgt","education","education_num",
 "marital_status","occupation","relationship","race","sex",
 "capital_gain","capital_loss","hours_per_week",
 "native_country","income"
 ]
-
-df_train = pd.read_csv(
-    "data/adult.data",
-    names=cols,
-    sep=",",
-    skipinitialspace=True
-)
-
-print(df_train.head())
-
-df_test = pd.read_csv(
-    "data/adult.test",
-    names=cols,
-    sep=",",
-    skiprows=1,
-    skipinitialspace=True
-)
-
-df = pd.concat([df_train, df_test], ignore_index=True)
-
-# df_train.to_csv("data/adult_income.csv", index=False)
-# df_test.to_csv("data/adult_income_test.csv", index=False)
-
 
 df = pd.read_csv("data/adult_income.csv")
 
@@ -64,7 +40,6 @@ for col in df.select_dtypes(include="object").columns:
     df[col] = df[col].astype(str).str.strip()
     df[col] = le.fit_transform(df[col])
     encoders[col] = le
-
 
 
 X = df.drop("income", axis=1)
