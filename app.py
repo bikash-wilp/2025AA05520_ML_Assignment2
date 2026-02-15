@@ -51,10 +51,15 @@ uploaded_file = st.file_uploader(
     type=["csv"]
 )
 
+predict_btn = st.button("Run Model")
+
 # ------------------------------
 # PROCESS DATA
 # ------------------------------
-if uploaded_file is not None:
+if predict_btn and uploaded_file is None:
+    st.error("Please upload a CSV file before running model.")
+
+if predict_btn and uploaded_file is not None:
 
     df = pd.read_csv(uploaded_file)
 
