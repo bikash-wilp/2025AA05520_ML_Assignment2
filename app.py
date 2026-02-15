@@ -91,7 +91,10 @@ if uploaded_file is not None:
         # encode using saved encoders
         for col, le in encoders.items():
             if col in X.columns:
-             X[col] = le.transform(X[col])
+                X[col] = X[col].apply(
+                    lambda x: x if x in le.classes_ else le.classes_[0]
+                )
+                X[col] = le.transform(X[col])
 
         # reorder columns
         X = X[feature_cols]
