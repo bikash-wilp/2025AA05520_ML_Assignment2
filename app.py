@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import joblib
 import matplotlib.pyplot as plt
+import os
 
 from sklearn.metrics import (
     accuracy_score,
@@ -15,6 +16,10 @@ from sklearn.metrics import (
     classification_report,
     ConfusionMatrixDisplay
 )
+
+st.write("Files root:", os.listdir())
+if os.path.exists("model"):
+    st.write("Model files:", os.listdir("model"))
 
 encoders = joblib.load("model/encoders.pkl")
 scaler = joblib.load("model/scaler.pkl")
